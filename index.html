@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Unidad de Rescate de Proyectos SAP &amp; Visma - BlatoRH Group</title>
+<!-- Tailwind CSS --><script src="https://cdn.tailwindcss.com"></script>
+<!-- Google Fonts --><link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Exo:wght@300;400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Custom Styles & Branding --><style>
+        :root {
+            --bl-azul-oscuro: #0D2240;
+            --bl-azul-principal: #1A77D2;
+            --bl-dorado: #B1A96E;
+            --bl-blanco: #FFFFFF;
+        }
+
+        /* Apply custom fonts using Tailwind's theme extension */
+        .font-bebas { font-family: 'Bebas Neue', sans-serif; }
+        .font-exo { font-family: 'Exo', sans-serif; }
+
+        /* Custom gradient for hero section */
+        .hero-gradient {
+            background: linear-gradient(180deg, rgba(13, 34, 64, 0.95) 0%, rgba(13, 34, 64, 1) 100%);
+        }
+
+        /* Animation for elements on scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Styles for dynamic text animation */
+        #dynamic-tech {
+            display: inline-block;
+            transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+        }
+        .is-changing {
+            opacity: 0;
+            transform: translateY(-1rem);
+        }
+
+        /* --- Microinteracciones --- */
+
+        /* 1. Rescue Scroll Bar */
+        @keyframes progressPulse {
+            0% { box-shadow: 0 0 0 0 rgba(177, 169, 110, 0.7); }
+            50% { box-shadow: 0 0 5px 2px rgba(177, 169, 110, 0.8); }
+            100% { box-shadow: 0 0 0 0 rgba(177, 169, 110, 0); }
+        }
+        #rescue-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background-color: rgba(13, 34, 64, 0.5);
+            z-index: 100;
+        }
+        #rescue-progress {
+            width: 0%;
+            height: 100%;
+            background: var(--bl-dorado);
+            transition: width 0.1s linear;
+        }
+        .progress-pulse {
+            animation: progressPulse 2s ease-out infinite;
+        }
+
+        /* 2. Botón "Latiendo" */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 10px 0 rgba(177, 169, 110, 0); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px 5px rgba(177, 169, 110, 0.5); }
+        }
+        .btn-rescue {
+            animation: heartbeat 2s infinite ease-in-out;
+        }
+
+        /* 3. Efecto Hover "Reparación" */
+        .repair-hover {
+            transition: filter 0.5s ease-out, transform 0.3s ease-out, border-color 0.3s ease;
+            border-color: rgba(177, 169, 110, 0.4);
+        }
+        .repair-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: var(--bl-dorado);
+        }
+
+        /* Efecto Hover para la Metodología */
+        .methodology-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        /* 4. Sello de Garantía Flotante */
+        .guarantee-seal {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+        }
+        .seal-icon {
+            width: 90px;
+            height: 90px;
+            background-color: var(--bl-dorado);
+            color: var(--bl-azul-oscuro);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-family: 'Bebas Neue', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease;
+            animation: spin-slow 10s linear infinite;
+        }
+        .seal-icon:hover {
+           transform: scale(1.1);
+           animation-play-state: paused;
+        }
+        .seal-icon .text-large { font-size: 2rem; line-height: 1; }
+        .seal-icon .text-small { font-size: 0.75rem; line-height: 1; letter-spacing: 0.5px; }
+
+        .seal-details {
+            position: absolute;
+            right: 105px; /* Al lado del sello */
+            bottom: 0px;
+            background-color: var(--bl-azul-oscuro);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            width: 280px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+            pointer-events: none;
+        }
+        .seal-details h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--bl-dorado);
+            font-size: 1.25rem;
+            margin-bottom: 5px;
+        }
+        .guarantee-seal:hover .seal-details {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        @keyframes spin-slow {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* --- ORGANIGRAMA INTERACTIVO (VERSIÓN PROFESIONAL REFINADA) --- */
+        .interactive-org-chart {
+            background-color: rgba(0,0,0,0.2);
+            padding: clamp(1.5rem, 4vw, 2.5rem); /* Padding adaptable */
+            border-radius: 0.75rem;
+            border: 1px solid rgba(177, 169, 110, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 2rem; /* Espacio entre título, botones y contenido */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4); /* Sombra para profundidad */
+        }
+
+        .phase-selectors {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            background-color: rgba(0,0,0,0.3); /* Fondo para agrupar botones */
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .phase-selector {
+            background-color: transparent;
+            color: var(--bl-blanco);
+            border: 2px solid transparent;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.25rem;
+            letter-spacing: 1px;
+            padding: 0.75rem 1rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .phase-selector:hover {
+            background-color: rgba(177, 169, 110, 0.2);
+        }
+        .phase-selector.active {
+            background-color: var(--bl-dorado);
+            color: var(--bl-azul-oscuro);
+            font-weight: bold;
+            box-shadow: 0 0 15px rgba(177, 169, 110, 0.5);
+        }
+
+        .phase-content {
+            display: none; /* Oculto por defecto */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+        .phase-content.active {
+            display: block; /* Mostrado cuando está activo */
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .phase-layout {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        .director-card {
+            grid-column: 1 / -1; /* Ocupa todo el ancho */
+            position: relative;
+            padding-bottom: 1.5rem; /* Espacio para conector */
+            margin-bottom: 1.5rem;
+        }
+
+        /* Conector del Director */
+        .director-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1.5rem;
+            background-color: rgba(177, 169, 110, 0.4);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            position: relative;
+        }
+
+        /* Línea horizontal sobre el equipo */
+        .team-grid::before {
+            content: '';
+            position: absolute;
+            top: -1.5rem;
+            left: 25%;
+            right: 25%;
+            height: 2px;
+            background-color: rgba(177, 169, 110, 0.4);
+        }
+
+        .team-member-card {
+             position: relative;
+        }
+
+        /* Conector individual de cada miembro hacia arriba */
+        .team-member-card::before {
+            content: '';
+            position: absolute;
+            top: -1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 1.5rem;
+            background-color: rgba(177, 169, 110, 0.4);
+        }
+
+        .team-member {
+            background: var(--bl-azul-oscuro);
+            color: white;
+            padding: 1.25rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            border-left: 4px solid var(--bl-dorado);
+            width: 100%;
+            min-height: 110px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .team-member:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+        }
+        .team-member h4 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: var(--bl-dorado);
+            font-size: 1.3rem;
+            line-height: 1.2;
+        }
+        .team-member p {
+            font-size: 0.85rem;
+            color: #ccc;
+            line-height: 1.4;
+            margin-top: 0.25rem;
+        }
+
+        /* --- ARSENAL TECNOLÓGICO: CUADRÍCULA DINÁMICA --- */
+        .tech-logo-card {
+            /* Se establece el color base para el SVG/currentColor aquí */
+            color: var(--bl-azul-oscuro);
+            background-color: var(--bl-blanco);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 180px; /* Altura fija para uniformidad */
+        }
+        .tech-logo-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .tech-logo-card svg {
+            height: 60px;
+            width: auto;
+            /* Aplicamos el filtro para el efecto gris, ahora con fill=currentColor */
+            filter: grayscale(100%);
+            opacity: 0.6;
+            transition: all 0.5s ease;
+        }
+        .tech-logo-card:hover svg {
+            filter: grayscale(0%);
+            opacity: 1;
+            transform: scale(1.05);
+        }
+
+        .tech-expertise {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bl-azul-oscuro);
+            color: white;
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transform: translateY(100%);
+            transition: transform 0.4s ease-out;
+            font-family: 'Exo', sans-serif;
+        }
+        .tech-logo-card:hover .tech-expertise {
+            transform: translateY(0);
+        }
+
+    
+
+/* ===== Animaciones personalizadas por BlatoRH - FadeZoomIn ===== */
+@keyframes fadeZoomIn {
+  0% { opacity: 0; transform: scale(0.85); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.cine-card { opacity: 0; transform: scale(0.85); will-change: transform, opacity; }
+.cine-card.visible { animation: fadeZoomIn var(--anim-dur, 0.8s) ease-out var(--anim-delay, 0s) forwards; }
+.tech-logo-card.gold-border { border: 3px solid var(--bl-dorado); box-shadow: 0 0 20px rgba(177,169,110,0.25); background: linear-gradient(180deg, #ffffff 0%, #fdfaf1 100%); }
+.tech-logo-card.gold-border:hover { transform: translateY(-4px); box-shadow: 0 10px 24px rgba(0,0,0,0.12), 0 0 28px rgba(177,169,110,0.35); }
+.tech-logo-card img, .tech-logo-card svg { width: 100%; height: 100%; object-fit: contain; opacity: 0.92; transition: opacity 0.3s ease; }
+.tech-logo-card:hover img, .tech-logo-card:hover svg { opacity: 1; }
+/* --- Ajuste visual del formulario principal --- */
+section[id="contacto"] { scroll-margin-top: 100px; padding-top: 4rem; }
+section[id="contacto"] h3 { margin-top: 1.5rem; text-align: center; font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 1px; color: var(--bl-azul-oscuro); text-transform: uppercase; font-weight: 700; }
+#contacto form { background: #ffffff; border-radius: 1rem; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); padding: 2.5rem; margin-top: 2rem; }
+#contacto input, #contacto select, #contacto textarea { border: 1.5px solid #e0e0e0; transition: all 0.3s ease; }
+#contacto input:focus, #contacto select:focus, #contacto textarea:focus { border-color: var(--bl-dorado); outline: none; box-shadow: 0 0 0 3px rgba(177, 169, 110, 0.2); }
+#contacto label { font-weight: 600; color: #334155; }
+/* Botón principal estilo 1: Dorado con texto azul oscuro */
+#contacto button, #contacto .btn-primary { background-color: var(--bl-dorado); color: var(--bl-azul-oscuro); font-weight: 700; transition: all 0.3s ease; }
+#contacto button:hover, #contacto .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.05); }
+</style>
+</head>
+<body class="font-exo bg-[var(--bl-blanco)] text-gray-800">
+<!-- Rescue Scroll Bar -->
+<div id="rescue-bar">
+<!-- Añadido pulso de animación para refuerzo visual -->
+<div class="progress-pulse" id="rescue-progress"></div>
+</div>
+<!-- Header --><header class="bg-[var(--bl-azul-oscuro)] text-white shadow-lg sticky top-0 z-50">
+<div class="container mx-auto px-6 py-4 flex justify-between items-center">
+<a class="hover:opacity-80 transition-opacity" href="https://www.blatorh.com">
+<img alt="BlatoRH Group" class="h-20 md:h-24 lg:h-28 w-auto object-contain" src="blatorh.jpg"/>
+</a>
+<a class="hidden md:inline-block text-sm font-semibold border-2 border-[var(--bl-dorado)] text-[var(--bl-dorado)] px-4 py-2 rounded-md hover:bg-[var(--bl-dorado)] hover:text-[var(--bl-azul-oscuro)] transition-all duration-300" href="https://www.blatorh.com">
+                Volver al Sitio Principal
+            </a>
+</div>
+</header>
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-20 md:py-32">
+<div class="container mx-auto px-6 text-center">
+<h1 class="font-bebas text-5xl md:text-7xl lg:text-8xl tracking-wider uppercase reveal">
+                Su proyecto <span id="dynamic-tech">SAP</span> está en crisis.
+            </h1>
+<h2 class="font-bebas text-4xl md:text-6xl lg:text-7xl tracking-wider uppercase text-[var(--bl-dorado)] reveal" style="transition-delay: 100ms;">Nosotros lo rescatamos.</h2>
+<p class="font-exo text-xl max-w-3xl mx-auto mt-6 reveal" style="transition-delay: 200ms; line-height: 1.7;">
+                Diagnosticamos, reestructurramos y reactivamos su implementación en 60 días o menos. Recupere su inversión y obtenga el ROI que esperaba.
+            </p>
+<!-- CTA mejorado con valor específico -->
+<a class="btn-rescue mt-8 inline-block bg-[var(--bl-dorado)] text-[var(--bl-azul-oscuro)] font-bold text-xl font-bebas tracking-wider px-10 py-4 rounded-lg transform hover:scale-105 transition-transform duration-300 shadow-lg reveal" href="#contacto" style="transition-delay: 300ms;">
+                Iniciar Diagnóstico Rápido (7 Días)
+            </a>
+</div>
+</section>
+<!-- Symptoms Section --><section class="py-16 md:py-24 bg-gray-50" id="sintomas">
+<div class="container mx-auto px-6">
+<div class="text-center max-w-3xl mx-auto">
+<h2 class="font-bebas text-4xl md:text-5xl tracking-wider text-[var(--bl-azul-oscuro)] reveal">¿Reconoce alguno de estos síntomas?</h2>
+<p class="mt-4 text-lg text-gray-600 reveal">Si su proyecto de implementación presenta estas señales, es momento de actuar.</p>
+</div>
+<!-- Aplicado nuevo hover 'repair-hover' -->
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12">
+<div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[var(--bl-dorado)] reveal repair-hover">
+<div class="flex items-center">
+<svg class="h-8 w-8 text-[var(--bl-dorado)]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h3 class="font-bebas text-2xl text-gray-800 ml-4">Errores Críticos en Producción</h3>
+</div>
+<p class="mt-4 text-gray-600">Problemas en la liquidación, flujos truncados o fallos en integraciones que afectan la operación diaria.</p>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[var(--bl-dorado)] reveal repair-hover" style="transition-delay: 100ms;">
+<div class="flex items-center">
+<svg class="h-8 w-8 text-[var(--bl-dorado)]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h3 class="font-bebas text-2xl text-gray-800 ml-4">Usuarios Frustrados y Baja Adopción</h3>
+</div>
+<p class="mt-4 text-gray-600">Su equipo no utiliza la plataforma, se resiste al cambio o ha vuelto a procesos manuales por desconfianza.</p>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-[var(--bl-dorado)] reveal repair-hover" style="transition-delay: 200ms;">
+<div class="flex items-center">
+<svg class="h-8 w-8 text-[var(--bl-dorado)]" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h3 class="font-bebas text-2xl text-gray-800 ml-4">Plazos y Presupuestos Excedidos</h3>
+</div>
+<p class="mt-4 text-gray-600">El proyecto parece no tener fin, con fechas de entrega que se posponen constantemente y costos que se disparan.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Solution Section --><section class="py-16 md:py-24 bg-[var(--bl-azul-oscuro)] text-white" id="solucion">
+<div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+<div class="reveal">
+<span class="font-bebas text-lg text-[var(--bl-dorado)] tracking-wider">Nuestra Solución</span>
+<h2 class="font-bebas text-4xl md:text-5xl tracking-wider mt-2">Unidad de Rescate BlatoRH:</h2>
+<h3 class="font-bebas text-3xl md:text-4xl tracking-wider text-gray-300">Un equipo de élite para situaciones críticas.</h3>
+<p class="mt-6 font-light text-xl" style="line-height: 1.7;">
+                    No somos otro implementador. Somos un equipo de especialistas senior con experiencia comprobada en la recuperación de proyectos complejos. Nuestra misión es transformar un problema crítico en un caso de éxito, protegiendo su inversión y restaurando la confianza en su plataforma tecnológica.
+                </p>
+<ul class="mt-6 space-y-4">
+<li class="flex items-start"><svg class="h-6 w-6 text-[var(--bl-dorado)] flex-shrink-0 mr-3 mt-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span><strong class="font-semibold">Resultados rápidos:</strong> Generamos impacto visible en las primeras 2 semanas.</span></li>
+<li class="flex items-start"><svg class="h-6 w-6 text-[var(--bl-dorado)] flex-shrink-0 mr-3 mt-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span><strong class="font-semibold">Experiencia Senior:</strong> Acceda a un equipo multidisciplinario con pericia en crisis.</span></li>
+<li class="flex items-start"><svg class="h-6 w-6 text-[var(--bl-dorado)] flex-shrink-0 mr-3 mt-1" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg><span><strong class="font-semibold">Socio Estratégico:</strong> Nos convertimos en una puerta de entrada a la estabilización y el crecimiento a largo plazo.</span></li>
+</ul>
+</div>
+<!-- ORGANIGRAMA INTERACTIVO -->
+<div class="interactive-org-chart reveal" style="transition-delay: 150ms;">
+<h3 class="font-bebas text-2xl md:text-3xl text-center text-white tracking-wider">Conozca a su Equipo de Rescate</h3>
+<div class="phase-selectors">
+<button class="phase-selector active" data-phase="1">Fase 1: Diagnóstico</button>
+<button class="phase-selector" data-phase="2">Fase 2: Plan de Rescate</button>
+<button class="phase-selector" data-phase="3">Fase 3: Ejecución</button>
+</div>
+<div class="phase-content-area">
+<!-- Contenido Fase 1 -->
+<div class="phase-content active" id="phase-1">
+<div class="phase-layout">
+<div class="director-card flex justify-center">
+<div class="team-member w-full md:w-3/4">
+<h4>Director de Unidad de Rescate</h4>
+<p>Supervisa la estrategia y garantiza los resultados de la fase.</p>
+</div>
+</div>
+<div class="team-grid">
+<div class="team-member-card">
+<div class="team-member">
+<h4>Líder de Proyecto</h4>
+<p>Define el plan de acción inicial y la comunicación.</p>
+</div>
+</div>
+<div class="team-member-card">
+<div class="team-member">
+<h4>Analista Funcional Sr.</h4>
+<p>Audita el sistema e identifica errores y puntos de fricción.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Contenido Fase 2 -->
+<div class="phase-content" id="phase-2">
+<div class="phase-layout">
+<div class="director-card flex justify-center">
+<div class="team-member w-full md:w-3/4">
+<h4>Director de Unidad de Rescate</h4>
+<p>Valida el plan de rescate y asigna los recursos de élite.</p>
+</div>
+</div>
+<div class="team-grid">
+<div class="team-member-card">
+<div class="team-member">
+<h4>Arquitecto de Soluciones</h4>
+<p>Rediseña flujos y procesos críticos para máxima eficiencia.</p>
+</div>
+</div>
+<div class="team-member-card">
+<div class="team-member">
+<h4>Consultor Estratégico</h4>
+<p>Alinea la tecnología con los nuevos objetivos de negocio.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Contenido Fase 3 -->
+<div class="phase-content" id="phase-3">
+<div class="phase-layout">
+<div class="director-card flex justify-center">
+<div class="team-member w-full md:w-3/4">
+<h4>Director de Unidad de Rescate</h4>
+<p>Monitorea la ejecución y asegura la estabilización final.</p>
+</div>
+</div>
+<div class="team-grid">
+<div class="team-member-card">
+<div class="team-member">
+<h4>Desarrollador Senior</h4>
+<p>Implementa correcciones, optimizaciones y nuevas funcionalidades.</p>
+</div>
+</div>
+<div class="team-member-card">
+<div class="team-member">
+<h4>Especialista en Change Management</h4>
+<p>Capacita a los usuarios y asegura la total adopción del sistema.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Methodology Section --><section class="py-16 md:py-24" id="metodologia">
+<div class="container mx-auto px-6">
+<div class="text-center max-w-3xl mx-auto">
+<h2 class="font-bebas text-4xl md:text-5xl tracking-wider text-[var(--bl-azul-oscuro)] reveal">Nuestra Metodología Probada</h2>
+<p class="mt-4 text-lg text-gray-600 reveal">Un proceso de 3 pasos, diseñado para ofrecer claridad, velocidad y resultados tangibles.</p>
+</div>
+<!-- Aplicado nuevo hover 'methodology-card' -->
+<div class="relative mt-16">
+<div class="hidden lg:block absolute top-1/2 left-0 w-full h-0.5 bg-gray-300" style="transform: translateY(-50%);"></div>
+<div class="grid lg:grid-cols-3 gap-12 relative">
+<div class="methodology-card bg-white p-8 rounded-xl shadow-xl border-b-8 border-[var(--bl-dorado)] text-center reveal transition-all duration-300">
+<div class="bg-[var(--bl-azul-oscuro)] text-[var(--bl-dorado)] w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+<span class="font-bebas text-4xl">01</span>
+</div>
+<h3 class="font-bebas text-2xl mt-6 text-[var(--bl-azul-oscuro)]">Diagnóstico Rápido</h3>
+<p class="font-exo font-bold text-gray-500">(7 Días)</p>
+<p class="mt-4 text-gray-600">Identificamos las causas raíz del problema y entregamos un informe ejecutivo con un plan de acción claro y priorizado.</p>
+</div>
+<div class="methodology-card bg-white p-8 rounded-xl shadow-xl border-b-8 border-[var(--bl-dorado)] text-center reveal transition-all duration-300" style="transition-delay: 150ms;">
+<div class="bg-[var(--bl-azul-oscuro)] text-[var(--bl-dorado)] w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+<span class="font-bebas text-4xl">02</span>
+</div>
+<h3 class="font-bebas text-2xl mt-6 text-[var(--bl-azul-oscuro)]">Plan de Rescate Express</h3>
+<p class="font-exo font-bold text-gray-500">(8 Días)</p>
+<p class="mt-4 text-gray-600">Diseñamos un roadmap de recuperación con "Quick Wins" para generar impacto visible en las primeras 2 semanas.</p>
+</div>
+<div class="methodology-card bg-white p-8 rounded-xl shadow-xl border-b-8 border-[var(--bl-dorado)] text-center reveal transition-all duration-300" style="transition-delay: 300ms;">
+<div class="bg-[var(--bl-azul-oscuro)] text-[var(--bl-dorado)] w-20 h-20 rounded-full flex items-center justify-center mx-auto">
+<span class="font-bebas text-4xl">03</span>
+</div>
+<h3 class="font-bebas text-2xl mt-6 text-[var(--bl-azul-oscuro)]">Ejecución y Estabilización</h3>
+<p class="font-exo font-bold text-gray-500">(30-45 Días)</p>
+<p class="mt-4 text-gray-600">Nuestro equipo interviene para corregir errores, reentrenar usuarios y asegurar la estabilidad funcional de su plataforma.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Arsenal Section: Reemplazado por Cuadrícula Dinámica -->
+<section class="py-16 md:py-24 bg-gray-50" id="arsenal">
+<div class="container mx-auto px-6">
+<div class="text-center max-w-3xl mx-auto">
+<h2 class="font-bebas text-4xl md:text-5xl tracking-wider text-[var(--bl-azul-oscuro)] reveal">Nuestro Arsenal Tecnológico</h2>
+<p class="mt-4 text-lg text-gray-600 reveal">Dominamos las plataformas líderes del mercado para garantizar el éxito de su rescate. Haga hover para ver nuestra especialidad.</p>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6 mt-12">
+<!-- Tarjeta 1: SAP (Corregido para usar currentColor) -->
+<div class="tech-logo-card gold-border reveal cine-card" style="--anim-dur: 0.8s; --anim-delay: 0s;"><img alt="SAP Silver Partner" src="sap-silver.jpg" style="width:100%;height:100%;object-fit:contain;"/><div class="tech-expertise">Expertos en SAP S/4HANA y ECC</div></div>
+<!-- Tarjeta 2: VISMA (Corregido para usar currentColor) -->
+<div class="tech-logo-card gold-border reveal cine-card" style="--anim-dur: 0.8s; --anim-delay: 0.1s;"><img alt="Visma" src="visma.jpg" style="width:100%;height:100%;object-fit:contain;"/><div class="tech-expertise">Experto en implementaciones y estabilizaciones de Sistemas Visma</div></div>
+<!-- Tarjeta 3: MICROSOFT AZURE/POWER BI (Corregido para usar currentColor) -->
+<div class="tech-logo-card gold-border reveal cine-card" style="--anim-dur: 0.8s; --anim-delay: 0.2s;"><img alt="Meta4" src="meta4.jpg" style="width:100%;height:100%;object-fit:contain;"/><div class="tech-expertise">El Meta4 que mereces. Expertos en rescate de nómina y talento</div></div>
+<!-- Tarjeta 4: AWS (Corregido para usar currentColor) -->
+<div class="tech-logo-card gold-border reveal cine-card" style="--anim-dur: 0.8s; --anim-delay: 0.3s;"><img alt="RescueScan" src="rescuescan.jpg" style="width:100%;height:100%;object-fit:contain;"/><div class="tech-expertise">Porque sabemos que su nómina falla desarrollamos RescueScan diagnóstico automatizado en 48 horas</div></div>
+<!-- Tarjeta 5: Custom Tech/Integration (Icono de Engranajes) -->
+<div class="tech-logo-card gold-border reveal cine-card" style="--anim-dur: 0.8s; --anim-delay: 0.4s;"><img alt="ChangeTracker" src="changetracker.jpg" style="width:100%;height:100%;object-fit:contain;"/><div class="tech-expertise">Más allá de lo técnico. Por fin sabrá si sus empleados están usando (y amando) su nuevo sistema.</div></div>
+</div>
+</div>
+</section>
+<!-- Testimonial Section --><section class="py-16 md:py-24" id="casos-de-exito">
+<div class="container mx-auto px-6 text-center">
+<div class="max-w-4xl mx-auto reveal">
+<img alt="Logo Cliente Piloto" class="mx-auto rounded-full" src="https://placehold.co/120x120/B1A96E/0D2240?text=Cliente+Piloto"/>
+<blockquote class="mt-8">
+<p class="text-xl md:text-2xl font-light italic text-gray-700">"La Unidad de Rescate de BlatoRH no solo salvó nuestro proyecto, sino que restauró la confianza de nuestro equipo en la plataforma. Su velocidad y precisión fueron excepcionales y lograron en 45 días lo que no habíamos podido en un año."</p>
+</blockquote>
+<cite class="mt-6 block font-bold text-[var(--bl-azul-oscuro)] text-lg">
+                    Nombre del Sponsor, Cargo
+                    <span class="block font-normal text-gray-500 mt-1">Empresa del Cliente Piloto</span>
+</cite>
+</div>
+</div>
+</section>
+<!-- CTA Section --><section class="py-16 md:py-24 bg-[var(--bl-azul-oscuro)] text-white" id="contacto">
+<div class="container mx-auto px-6">
+<div class="grid md:grid-cols-2 gap-12 items-center">
+<div class="reveal">
+<h2 class="font-bebas text-4xl md:text-5xl tracking-wider">Es hora de tomar el control de su proyecto.</h2>
+<p class="mt-4 text-lg text-gray-300 font-light">Deje de perder tiempo y dinero. Una evaluación de 30 minutos con nuestros especialistas puede ser el primer paso para recuperar su inversión y alcanzar sus objetivos. La consulta es confidencial y sin compromiso.</p>
+</div>
+<div class="bg-white p-8 rounded-xl shadow-2xl reveal" style="transition-delay: 150ms;">
+<h3 class="font-bebas text-3xl text-center text-[var(--bl-azul-oscuro)]">Solicite su Evaluación Gratuita</h3>
+<form action="#" class="mt-6 space-y-4" method="POST">
+<div>
+<label class="sr-only" for="name">Nombre</label>
+<input class="w-full px-4 py-3 rounded-md border-gray-300 focus:ring-[var(--bl-dorado)] focus:border-[var(--bl-dorado)] text-gray-900" id="name" name="name" placeholder="Nombre Completo" required="" type="text"/>
+</div>
+<div>
+<label class="sr-only" for="email">Email</label>
+<input class="w-full px-4 py-3 rounded-md border-gray-300 focus:ring-[var(--bl-dorado)] focus:border-[var(--bl-dorado)] text-gray-900" id="email" name="email" placeholder="Email Corporativo" required="" type="email"/>
+</div>
+<div>
+<label class="sr-only" for="company">Empresa</label>
+<input class="w-full px-4 py-3 rounded-md border-gray-300 focus:ring-[var(--bl-dorado)] focus:border-[var(--bl-dorado)] text-gray-900" id="company" name="company" placeholder="Empresa" required="" type="text"/>
+</div>
+<!-- NUEVO CAMPO DE SELECCIÓN DE PLATAFORMA -->
+<div>
+<label class="sr-only" for="platform">Plataforma Principal</label>
+<select class="w-full px-4 py-3 rounded-md border-gray-300 focus:ring-[var(--bl-dorado)] focus:border-[var(--bl-dorado)] text-gray-900" id="platform" name="platform" required="">
+<option disabled="" selected="" value="">Plataforma principal en crisis</option>
+<option value="SAP">SAP ERP (ECC/S/4HANA)</option>
+<option value="Visma">Visma (RRHH/Nómina)</option>
+<option value="Meta4">Meta4 / Cegid</option>
+<option value="Other">Otra / Necesito asesoría</option>
+</select>
+</div>
+<div>
+<label class="sr-only" for="message">Mensaje</label>
+<textarea class="w-full px-4 py-3 rounded-md border-gray-300 focus:ring-[var(--bl-dorado)] focus:border-[var(--bl-dorado)] text-gray-900" id="message" name="message" placeholder="Cuéntenos brevemente sobre su desafío (Opcional)" rows="4"></textarea>
+</div>
+<div>
+<button class="btn-rescue w-full bg-[var(--bl-dorado)] text-[var(--bl-azul-oscuro)] font-bold text-lg font-bebas tracking-wider px-8 py-3 rounded-lg hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-lg" type="submit">
+                                Enviar Solicitud
+                            </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer --><footer class="bg-gray-900 text-gray-400">
+<div class="container mx-auto px-6 py-12">
+<div class="grid md:grid-cols-3 gap-8 text-center md:text-left">
+<!-- Logo & Copyright -->
+<div>
+<a class="inline-block" href="https://www.blatorh.com">
+<svg fill="none" height="40" viewbox="0 0 220 40" width="220" xmlns="http://www.w3.org/2000/svg">
+<text font-family="Bebas Neue, sans-serif" font-size="36" letter-spacing="0.01em" style="white-space: pre" xml:space="preserve">
+<tspan fill="white" x="0" y="30.5">Blato</tspan><tspan fill="#B1A96E">RH</tspan>
+</text>
+</svg>
+</a>
+<p class="mt-4 text-sm">© 2022 - 2025 BlatoRH Group | All Rights Reserved.</p>
+</div>
+<!-- Contact Info -->
+<div>
+<h4 class="font-bebas text-lg text-white tracking-wider">Contacto</h4>
+<div class="mt-2 space-y-1 text-sm">
+<p><a class="hover:text-[var(--bl-dorado)]" href="mailto:info@blatorh.com">info@blatorh.com</a></p>
+<p><a class="hover:text-[var(--bl-dorado)]" href="tel:+541120715534">+54 11 2071 5534</a></p>
+<p><a class="hover:text-[var(--bl-dorado)]" href="tel:+5491132977888">+54 9 11 3297 7888</a></p>
+<p><a class="hover:text-[var(--bl-dorado)]" href="tel:+5491130770750">+54 9 11 3077 0750</a></p>
+</div>
+</div>
+<!-- Social Media -->
+<div>
+<h4 class="font-bebas text-lg text-white tracking-wider">Síganos</h4>
+<div class="mt-3 flex justify-center md:justify-start space-x-4">
+<a class="text-gray-400 hover:text-[var(--bl-dorado)]" href="https://www.linkedin.com/company/blatorh-group-srl/" rel="noopener noreferrer" target="_blank">
+<span class="sr-only">LinkedIn</span>
+<svg aria-hidden="true" class="h-6 w-6" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" fill-rule="evenodd"></path>
+</svg>
+</a>
+</div>
+</div>
+</div>
+</div>
+</footer>
+<!-- Sello de Garantía -->
+<div class="guarantee-seal">
+<div class="seal-details">
+<h4>Compromiso BlatoRH</h4>
+<p class="text-sm font-light">Nos comprometemos a entregar un diagnóstico claro y un plan de estabilización funcional para su proyecto en 60 días o menos.</p>
+</div>
+<!-- Texto del sello ajustado para mayor claridad -->
+<div aria-label="Garantía de Diagnóstico 60 Días" class="seal-icon">
+<span class="text-large">60</span>
+<span class="text-small">DÍAS</span>
+</div>
+</div>
+<!-- JS for animations and interactions --><script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- Animación de Revelado en Scroll ---
+            const revealElements = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+            revealElements.forEach(el => observer.observe(el));
+
+            // --- Rotador de Texto Dinámico ---
+            const techWords = ['SAP', 'Visma', 'Meta4'];
+            let currentWordIndex = 0;
+            const dynamicTechElement = document.getElementById('dynamic-tech');
+            if (dynamicTechElement) {
+                setInterval(() => {
+                    dynamicTechElement.classList.add('is-changing');
+                    setTimeout(() => {
+                        currentWordIndex = (currentWordIndex + 1) % techWords.length;
+                        dynamicTechElement.textContent = techWords[currentWordIndex];
+                        dynamicTechElement.classList.remove('is-changing');
+                    }, 400);
+                }, 2500);
+            }
+
+            // --- Lógica para Rescue Scroll Bar ---
+            const rescueProgressBar = document.getElementById('rescue-progress');
+            window.addEventListener('scroll', () => {
+                const totalHeight = document.body.scrollHeight - window.innerHeight;
+                // Manejo de caso en que el scroll no es posible (contenido corto)
+                const progress = totalHeight > 0 ? (window.pageYOffset / totalHeight) * 100 : 0;
+                rescueProgressBar.style.width = progress + '%';
+            });
+
+            // --- LÓGICA PARA ORGANIGRAMA INTERACTIVO ---
+            const phaseSelectors = document.querySelectorAll('.phase-selector');
+            const phaseContents = document.querySelectorAll('.phase-content');
+
+            phaseSelectors.forEach(button => {
+                button.addEventListener('click', () => {
+                    const targetPhase = button.getAttribute('data-phase');
+
+                    // Actualizar botones
+                    phaseSelectors.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    // Actualizar contenido
+                    phaseContents.forEach(content => {
+                        if (content.id === `phase-${targetPhase}`) {
+                            content.classList.add('active');
+                        } else {
+                            content.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
